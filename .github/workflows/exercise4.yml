@@ -27,3 +27,23 @@ jobs:
        with:
          name: build
          path: build
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: production
+      url: http://praveensankuratri@fico.com.surge.sh
+    steps:
+      - name: Download the build artifact
+        uses: actions/download-artifact@v4.1.2
+        with:
+          name: build
+          on:
+            push:
+            
+      - name: deploy to surge
+        run: npx surge --project '.' --domain praveensankuratri@fico.com.surge.sh
+        env:
+          SURGE-LOGIN: ${{ secrets.SURGE_LOGIN }}
+          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+     
